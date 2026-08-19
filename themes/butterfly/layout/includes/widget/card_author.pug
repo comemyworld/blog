@@ -1,0 +1,50 @@
+if theme.aside.card_author.enable
+  .card-widget.card-info.text-center
+    .avatar-img
+      img(src=url_for(theme.avatar.img) onerror=`this.onerror=null;this.src='` + url_for(theme.error_img.flink) + `'` alt="avatar")
+    .author-info-name= config.author
+    .author-info-description!= theme.aside.card_author.description || config.description
+
+    .site-data
+      a(href=url_for(config.archive_dir) + '/')
+        .headline= _p('aside.articles')
+        .length-num= site.posts.length
+      a(href=url_for(config.tag_dir) + '/')
+        .headline= _p('aside.tags')
+        .length-num= site.tags.length
+      a(href=url_for(config.category_dir) + '/')
+        .headline= _p('aside.categories')
+        .length-num= site.categories.length
+
+    if theme.aside.card_author.button.enable
+      a#card-info-btn(href=theme.aside.card_author.button.link)
+        i(class=theme.aside.card_author.button.icon)
+        span=theme.aside.card_author.button.text
+    
+    // ====== 新增：个人信息卡片列表 ======
+    if theme.aside.card_author.info_cards && theme.aside.card_author.info_cards.length
+      .my-profile-card
+        each item in theme.aside.card_author.info_cards
+          //- 如果配置了 link，整行做成可点击的 <a>；否则只做展示 <div>
+          if item.link
+            a.my-profile-item(href=item.link target=item.target || '_self' title=item.tooltip || '')
+              if item.icon
+                i.my-profile-icon(class=item.icon style=item.icon_color ? 'color:' + item.icon_color : '')
+              .my-profile-content
+                if item.label
+                  .my-profile-label=item.label
+                if item.value
+                  .my-profile-value=item.value
+          else
+            .my-profile-item
+              if item.icon
+                i.my-profile-icon(class=item.icon style=item.icon_color ? 'color:' + item.icon_color : '')
+              .my-profile-content
+                if item.label
+                  .my-profile-label=item.label
+                if item.value
+                  .my-profile-value=item.value
+
+    if(theme.social)
+      .card-info-social-icons
+        !=partial('includes/header/social', {}, {cache: true})

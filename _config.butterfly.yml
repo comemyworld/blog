@@ -18,10 +18,13 @@ nav:
   fixed: false
 
 menu:
-  # Home: / || fas fa-home
-  # List||fas fa-list:
-  #   Music: /music/ || fas fa-music
-  #   Movie: /movies/ || fas fa-video
+  首页: / || fas fa-home
+  技术文档: /categories/技术文档/ || fas fa-file-code
+  相册: /categories/相册/ || fas fa-camera-retro
+  归档: /archives/ || fas fa-archive
+  # 标签: /tags/ || fas fa-tags
+  # 分类: /categories/ || fas fa-bookmark
+  友链: /link/ || fas fa-link
 
 # --------------------------------------
 # Code Blocks Settings
@@ -29,10 +32,10 @@ menu:
 
 code_blocks:
   # Code block theme: darker / pale night / light / ocean / false
-  theme: light
-  macStyle: false
+  theme: darker
+  macStyle: true
   # Code block height limit (unit: px)
-  height_limit: false
+  height_limit: 500
   word_wrap: false
 
   # Toolbar
@@ -40,14 +43,14 @@ code_blocks:
   language: true
   # true: shrink the code blocks | false: expand the code blocks | none: expand code blocks and hide the button
   shrink: false
-  fullpage: false
+  fullpage: true
 
 # Social media links
 # Formal:
 #   icon: link || the description || color
-social:
-  # fab fa-github: https://github.com/xxxxx || Github || '#24292e'
-  # fas fa-envelope: mailto:xxxxxx@gmail.com || Email || '#4a7dbe'
+# social:
+#   fab fa-github: https://github.com/comemyworld || Github || '#24292e'
+#   fas fa-envelope: mailto:2718251287@qq.com || QQ邮箱 || '#4a7dbe'
 
 # --------------------------------------
 # Image Settings
@@ -56,17 +59,17 @@ social:
 favicon: /img/favicon.png
 
 avatar:
-  img: /img/butterfly-icon.png
+  img: https://fastly.jsdelivr.net/gh/comemyworld/blog-image@main/img/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260818170008_163_24.jpg
   effect: false
 
 # Disable all banner images
-disable_top_img: false
+disable_top_img: true
 
 # If the banner of page not setting, it will show the default_top_img
 default_top_img:
 
 # The banner image of index page
-index_img:
+index_img: https://fastly.jsdelivr.net/gh/comemyworld/blog-image@main/img/v2-ac8d604eec18d3efbbc3c171b5ba8b1d_xll.jpg
 
 # The banner image of archive page
 archive_img:
@@ -93,7 +96,7 @@ footer_img: false
 # Website Background
 # Can set it to color, image URL or an array containing colors and/or image URLs
 # If an array is provided, a random background will be selected from the array on each load
-background:
+background: /images/maozedong.jpg
 
 cover:
   # Disable the cover or not
@@ -182,7 +185,7 @@ index_layout: 3
 # 3: auto_excerpt (default)
 # false: do not show the article introduction
 index_post_content:
-  method: 3
+  method: 2
   # If you set method to 2 or 3, the length need to config
   length: 500
 
@@ -284,12 +287,40 @@ aside:
     category: true
   card_author:
     enable: true
-    description:
+    description: 我是一个学生，喜欢学习和分享知识
+    info_cards:
+      # 例1：纯展示，不可点击
+      - icon: fas fa-location-dot
+        icon_color: '#ef4444'
+        label: 所在地
+        value: 长沙
+
+      # 例2：纯展示，不可点击
+      - icon: fas fa-graduation-cap
+        icon_color: '#8b5cf6'
+        label: 职业
+        value: 学生 · 计算机
+
+      # 例3：可点击，跳转 GitHub（新窗口）
+      - icon: fab fa-github
+        icon_color: '#24292e'
+        label: GitHub
+        link: https://github.com/comemyworld
+        target: _blank
+        tooltip: 去我的 GitHub 看看
+
+      # 例4：可点击，唤起邮箱
+      - icon: fas fa-envelope
+        icon_color: '#4a7dbe'
+        label: 联系邮箱
+        value: 2718251287@qq.com
+        link: mailto:2718251287@qq.com
+        tooltip: 点击发邮件
     button:
-      enable: true
+      enable: false
       icon: fab fa-github
       text: Follow Me
-      link: https://github.com/xxxxxx
+      link: https://github.com/comemyworld
   card_announcement:
     enable: true
     content: This is my Blog
@@ -781,7 +812,7 @@ site_verification:
 # The user interface setting of category and tag page
 # Choose: index - same as Homepage UI / default - same as archives UI
 # leave it empty or index
-category_ui:
+category_ui: index
 tag_ui:
 
 # Rounded corners for UI elements
@@ -1057,9 +1088,10 @@ css_prefix: true
 # Insert the code to head (before '</head>' tag) and the bottom (before '</body>' tag)
 inject:
   head:
-    # - <link rel="stylesheet" href="/xxx.css">
+    - <link rel="stylesheet" href="/css/custom.css">
   bottom:
-    # - <script src="xxxx"></script>
+    - <script src="/js/infinite-scroll.js"></script>
+    - <script src="/js/cat-group.js"></script>
 
 # CDN Settings
 # Don't modify the following settings unless you know how they work
