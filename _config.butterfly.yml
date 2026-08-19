@@ -1092,6 +1092,7 @@ inject:
   bottom:
     - <script src="/js/infinite-scroll.js"></script>
     - <script src="/js/cat-group.js"></script>
+    - <script src="/js/video-bg.js"></script>
 
 # CDN Settings
 # Don't modify the following settings unless you know how they work

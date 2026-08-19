@@ -1,0 +1,7 @@
+{
+  "buildCommand": "npx hexo generate",
+  "outputDirectory": "public",
+  "installCommand": "npm install",
+  "cleanUrls": true,
+  "trailingSlash": true
+}

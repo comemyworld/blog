@@ -127,17 +127,35 @@ a.my-profile-item:hover {
   background-repeat: no-repeat !important;
   background-attachment: fixed !important;
 }
+/* 背景恢复原样：不叠加任何黑色变暗遮罩，直接显示图片原始亮度 */
 #web_bg::after {
-  content: '';
-  position: absolute;
+  display: none !important;
+  background: none !important;
+}
+
+/* ---------- 1.1 视频背景（与 #web_bg 同级，覆盖在图片背景之上） ---------- */
+#video_bg {
+  position: fixed;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.2) 0%,
-    rgba(0, 0, 0, 0.35) 40%,
-    rgba(0, 0, 0, 0.55) 100%
-  );
-  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1; /* 比 #web_bg 的 -2 高一层，比内容的 0 低 */
+  object-fit: cover; /* 类似 background-size:cover，裁切铺满 */
+  pointer-events: none; /* 禁止点击视频 */
+  display: block;
+  opacity: 1;
+  transition: opacity 0.6s ease-in;
+}
+/* 视频还在加载/失败时隐藏，保持图片背景作为兜底 */
+#video_bg.video-loading {
+  opacity: 0;
+}
+/* 移动端（窄屏+触摸设备）默认禁用视频，省流量也更流畅，
+   如果你想强制手机也播放，把下面整段删掉即可 */
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  #video_bg {
+    display: none !important;
+  }
 }
 
 /* ---------- 2. 首页：主容器透明化，让出背景 ---------- */
