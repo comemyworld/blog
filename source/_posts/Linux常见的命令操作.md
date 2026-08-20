@@ -5,8 +5,8 @@ tags:
   - 技术
   - Linux
 categories:
-  - 相册
-  - 生活
+  - 技术文档
+  - 命令操作
 description: Linux常见的命令操作
 top: true
 ---

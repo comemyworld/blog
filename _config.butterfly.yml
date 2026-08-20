@@ -968,8 +968,10 @@ abcjs:
 # Mermaid
 # https://github.com/mermaid-js/mermaid
 mermaid:
-  enable: false
+  enable: true
   # Write Mermaid diagrams using code blocks
+  # true = 构建期由 markdown-it-fence 生成 .mermaid-wrap（仅配合 hexo-renderer-markdown-it 使用）
+  # false = 运行期自动扫描 <pre><code class="mermaid"> 围栏代码块转成图（hexo-renderer-marked 推荐）
   code_write: false
   # built-in themes: default / forest / dark / neutral
   theme:

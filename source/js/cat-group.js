@@ -17,17 +17,17 @@
    * ============================================================ */
   const CONFIG = [
     {
-      parentName: '技术文档',                              // 卡片分类上写的「父分类名」
+      parentName: '技术文档', // 卡片分类上写的「父分类名」
       matchPaths: [
-        '/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/',   // URL encode 后的"技术文档"
-        '/categories/技术文档/',                                   // 部分浏览器直接显示中文
+        '/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/', // URL encode 后的"技术文档"
+        '/categories/技术文档/', // 部分浏览器直接显示中文
       ],
-      showByDefault: 2,    // 每组默认显示前 2 张
+      showByDefault: 3,    // 每组默认显示前 3 张（正好一行 3 列铺满；>3 才显示展开按钮）
     },
     {
       parentName: '相册',
       matchPaths: [
-        '/categories/%E7%9B%B8%E5%86%8C/',      // URL encode「相册」
+        '/categories/%E7%9B%B8%E5%86%8C/', // URL encode「相册」
         '/categories/相册/',
       ],
       showByDefault: 2,
@@ -117,27 +117,29 @@
     `;
     section.appendChild(title);
 
-    // 卡片网格
+    // 1) 默认显示区（前 SHOW_BY_DEFAULT 张）
     const gridTop = document.createElement('div');
     gridTop.className = 'home-portfolio-items cat-group-grid';
+    cards.slice(0, SHOW_BY_DEFAULT).forEach((c) => gridTop.appendChild(c));
+    section.appendChild(gridTop);
 
-    cards.forEach((c, idx) => {
-      if (idx < SHOW_BY_DEFAULT) gridTop.appendChild(c);
-    });
-
-    // 剩余卡片 -> 折叠容器
+    // 2) 剩余卡片 -> 折叠容器 + 展开按钮
     const rest = cards.slice(SHOW_BY_DEFAULT);
-    let moreBox = null;
-    let btn = null;
     if (rest.length > 0) {
-      moreBox = document.createElement('div');
+      // 先放折叠区（第 4+ 张卡片），按钮放在折叠区的【下面】
+      // 这样展开后：默认3张 → 剩余张 → 收起按钮（所有卡片最底部）
+      const moreBox = document.createElement('div');
       moreBox.className = 'cat-more cat-collapsed';
       const inner = document.createElement('div');
       inner.className = 'home-portfolio-items cat-group-grid';
       rest.forEach((c) => inner.appendChild(c));
       moreBox.appendChild(inner);
+      section.appendChild(moreBox);
 
-      btn = document.createElement('button');
+      // 再放展开/收起按钮（在折叠区下面，整组的最下方）
+      const btnWrap = document.createElement('div');
+      btnWrap.className = 'cat-expand-btn-wrap';
+      const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'cat-expand-btn';
       btn.dataset.state = 'collapsed';
@@ -145,6 +147,9 @@
         <span class="cat-expand-label">展开更多 <b class="cat-expand-num">${rest.length}</b> 篇</span>
         <i class="fas fa-chevron-down"></i>
       `;
+      btnWrap.appendChild(btn);
+      section.appendChild(btnWrap);
+
       btn.addEventListener('click', () => {
         const st = btn.dataset.state;
         if (st === 'collapsed') {
@@ -162,10 +167,6 @@
       });
     }
 
-    section.appendChild(gridTop);
-    if (moreBox) section.appendChild(moreBox);
-    if (btn) section.appendChild(btn);
-
     frag.appendChild(section);
   });
 
@@ -179,23 +180,28 @@
   if (pagination) root.appendChild(pagination);
 
   /* ============================================================
-   * PJAX 切页复用
+   * PJAX 切页后重新初始化
    * ============================================================ */
   if (window.pjax) {
     document.addEventListener('pjax:complete', () => {
-      if (hit()) requestAnimationFrame(init);
+      if (hit()) {
+        document.body.dataset.catGroupInited = '';
+        // 下一轮渲染会重新走
+      }
     });
   }
 
   function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, (c) => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-    }[c]));
+    return String(s).replace(
+      /[&<>"']/g,
+      (c) =>
+        ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+        })[c],
+    );
   }
-
-  function init() {
-    if (document.body.dataset.catGroupInited === '1') return;
-    document.body.dataset.catGroupInited = '1';
-  }
-  init();
 })();

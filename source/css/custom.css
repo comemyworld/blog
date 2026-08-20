@@ -1074,27 +1074,98 @@ body:has(#home-portfolio .cat-group) #content-inner {
   box-shadow: 0 3px 14px rgba(59, 159, 224, 0.35);
 }
 
-/* 13.3 分组内卡片网格：直接复用首页 3 列 grid 样式 */
+/* =========================================================
+   分类分组页（技术文档 / 相册 …）：
+   - 保留侧边栏（作者卡/公告/最新文章/目录），和首页一致
+   - 在「主区 74% + 侧栏 26%」的窄宽度下仍放 3 列卡片，
+     所以下面新增一组『卡片瘦身』样式，所有 padding/字号/封面高度
+     等比缩约 12%，保证三列不挤、不紧贴、视觉清爽
+   ========================================================= */
+
+/* 13.3 分组内卡片网格：3 列 + 24px 紧凑 gap（比首页的 28 略小一点以在窄主区放 3 列） */
 .cat-group-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 24px 24px !important;
   padding: 0 !important;
 }
+.cat-group-grid > .home-card {
+  margin: 0 !important;
+}
 
+/* 卡片整体瘦身（只在分类分组页生效，不影响首页） */
+body:has(#home-portfolio .cat-group) .home-card {
+  min-height: 320px; /* 原 360px → 缩 40px */
+  border-radius: 15px; /* 原 18px → 圆角略小 */
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.1),
+    0 2px 6px rgba(0, 0, 0, 0.05);
+}
+body:has(#home-portfolio .cat-group) .home-card-cover {
+  height: 172px; /* 原 200px → 封面矮约 14% */
+}
+body:has(#home-portfolio .cat-group) .home-card-no-cover {
+  font-size: 42px; /* 无封面时的占位图标也同步缩小 */
+}
+body:has(#home-portfolio .cat-group) .home-card-pin {
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
+}
+body:has(#home-portfolio .cat-group) .home-card-overlay {
+  padding: 13px 14px 14px; /* 原 16/18/18 → 缩小内边距 */
+  gap: 7px;
+}
+body:has(#home-portfolio .cat-group) .home-card-body {
+  gap: 7px;
+}
+body:has(#home-portfolio .cat-group) .home-card-cat {
+  padding: 2px 9px;
+  font-size: 10.5px; /* 原 11px → 分类胶囊略小 */
+}
+body:has(#home-portfolio .cat-group) .home-card-title {
+  font-size: 15.5px; /* 原 17px → 标题小 1.5px */
+  line-height: 1.4;
+  font-weight: 650;
+}
+
+/* 展开按钮包装器：
+   1) 明确跨所有 grid 列（3 列/2 列/1 列 都自动撑满整行）
+   2) 自己占满 100% 宽
+   3) 按钮在这一行里居中，保证显示在「整组卡片的最下方中间」而不是卡在第 1 列下面 */
+.cat-expand-btn-wrap {
+  grid-column: 1 / -1 !important;
+  column-span: all;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 100% !important;
+  margin-top: 28px;
+  margin-bottom: 4px;
+}
 /* 13.4 展开更多容器：cat-collapsed 时高度 0 隐藏，展开丝滑过渡 */
 .cat-more {
+  grid-column: 1 / -1 !important; /* 折叠区也跨所有列，展开后下面的卡片不会卡第一列 */
+  column-span: all;
   overflow: hidden;
   transition:
-    max-height 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
-    opacity 0.3s ease,
-    margin 0.3s ease;
-  max-height: 2000px; /* 如果某组展开的卡片非常多，把这个值改大：3000 / 5000 */
+    max-height 0.55s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.35s ease,
+    margin 0.35s ease;
+  max-height: 3000px;
   opacity: 1;
-  margin-top: 0;
+  margin-top: 20px;
+}
+.cat-more > .cat-group-grid {
+  /* 折叠区内部的卡片网格也是 3 列 */
 }
 .cat-more.cat-collapsed {
   max-height: 0;
   opacity: 0;
   pointer-events: none;
-  margin-top: -10px;
+  margin-top: 0;
 }
 
 /* 13.5 展开/收起按钮：蓝色胶囊，hover 上浮 */
@@ -1103,17 +1174,17 @@ body:has(#home-portfolio .cat-group) #content-inner {
   justify-content: center;
   align-items: center;
   gap: 8px;
-  margin: 22px auto 0;
-  padding: 9px 22px;
+  padding: 10px 28px;
   background: rgba(73, 177, 245, 0.12);
   color: #2e86c9;
   border: 1px solid rgba(73, 177, 245, 0.25);
   border-radius: 999px;
   cursor: pointer;
-  font-size: 13.5px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   transition: all 0.2s ease;
   user-select: none;
+  font-family: inherit;
 }
 .cat-expand-btn:hover {
   background: #49b1f5;
@@ -1147,10 +1218,55 @@ body:has(#home-portfolio .cat-group) #content-inner {
   color: #fff;
 }
 
-/* 13.7 小屏字号缩小 */
+/* 13.7 小屏：列数跟着缩 + 字号缩小 */
+@media (max-width: 1100px) {
+  /* 在保留侧栏时，如果屏宽 < 1100，3 列实在太挤，临时降为 2 列 */
+  .cat-group-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 22px 22px !important;
+  }
+}
 @media (max-width: 900px) {
   .cat-group-title h2 {
     font-size: 20px;
+  }
+  .cat-expand-btn-wrap {
+    margin-top: 22px;
+  }
+  .cat-more {
+    max-height: 4000px;
+    margin-top: 16px;
+  }
+  /* ≤900px 侧栏已经掉到下面（Butterfly 默认行为），卡片区又变宽，
+     这时卡片不再瘦身（恢复大卡片 + 2 列） */
+  body:has(#home-portfolio .cat-group) .home-card {
+    min-height: 360px;
+    border-radius: 18px;
+  }
+  body:has(#home-portfolio .cat-group) .home-card-cover {
+    height: 200px;
+  }
+  body:has(#home-portfolio .cat-group) .home-card-overlay {
+    padding: 16px 18px 18px;
+  }
+  body:has(#home-portfolio .cat-group) .home-card-title {
+    font-size: 17px;
+  }
+}
+@media (max-width: 560px) {
+  .cat-group-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  .cat-group-title {
+    padding: 6px 16px 6px 12px !important;
+  }
+  .cat-group-title h2 {
+    font-size: 18px;
+  }
+  .cat-expand-btn {
+    padding: 9px 22px;
+    font-size: 13px;
   }
 }
 
